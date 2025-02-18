@@ -129,6 +129,40 @@ shinyServer(function(input, output, session) {
   #        xlab = "x", main = "Poisson Partial Effect conditional on X=x")
   # })
   
+  output$plot6 <- renderPlot({
+    
+    ## Evaluate probabilities and plot
+    mu <- input$mu
+    pi_Hurdle_ZI <- input$pi_Hurdle_ZI
+    
+    # vector of outcome values to plot
+    jvec <- 0:(4*mu + 2)
+    
+    poissonprobs <- dpois(jvec, mu, log = FALSE)
+    probs <- (1-pi_Hurdle_ZI)* poissonprobs/(1 - exp(-mu))
+    probs[1] <- pi_Hurdle_ZI
+    barplot(probs, names.arg = jvec, ylab = "Pr(Y=j|mu)", xlab = "j", main = "Hurdle Poisson PMF, no explanatory variables")
+    
+    
+  })
   
+  output$plot7 <- renderPlot({
+    
+    ## Evaluate probabilities and plot
+    mu <- input$mu
+    pi_Hurdle_ZI <- input$pi_Hurdle_ZI
+    
+    # vector of outcome values to plot
+    jvec <- 0:(4*mu + 2)
+    
+    poissonprobs <- dpois(jvec, mu, log = FALSE)
+    probs <- (1-pi_Hurdle_ZI)* poissonprobs
+    probs[1] <- pi_Hurdle_ZI + probs[1]
+    barplot(probs, names.arg = jvec, ylab = "Pr(Y=j|mu)", xlab = "j", main = "Zero-Inflated Poisson PMF, no explanatory variables")
+    
+    
+    
+    
+  })
   
 })
